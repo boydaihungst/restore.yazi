@@ -82,13 +82,11 @@ end
 
 ---get list of latest files/folders trashed
 ---@param curr_working_volume currently working volume
----@return TRASHED_ITEM[]
+---@return TRASHED_ITEM[]|nil
 local function get_latest_trashed_items(curr_working_volume)
 	---@type TRASHED_ITEM[]
 	local restorable_items = {}
-
-	local fake_enter =
-		Command("printf"):arg(path_quote("\n")):stderr(Command.PIPED):stdout(Command.PIPED):spawn():take_stdout()
+	local fake_enter = Command("printf"):stderr(Command.PIPED):stdout(Command.PIPED):spawn():take_stdout()
 	local trash_list_stream, err_code = Command(shell)
 		:args({ "-c", "trash-restore " .. path_quote(curr_working_volume) })
 		:stdin(fake_enter)
@@ -100,8 +98,10 @@ local function get_latest_trashed_items(curr_working_volume)
 		---@type TRASHED_ITEM[]
 		local trash_list = {}
 		for line in trash_list_stream.stdout:gmatch("[^\r\n]+") do
+			-- remove leading spaces
+			line = line:match("^%s*(.+)$")
 			local trash_index, item_date, item_path = line:match("^(%d+) (%S+ %S+) (.+)$")
-			if item_date and item_path and trash_index then
+			if item_date and item_path and trash_index ~= nil then
 				table.insert(trash_list, {
 					trash_index = tonumber(trash_index),
 					trashed_date_time = item_date,
