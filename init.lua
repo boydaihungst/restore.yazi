@@ -60,24 +60,26 @@ end
 
 local function get_trash_volume()
 	local cwd = get_cwd()
-	local trash_volumes_stream, err_code =
+	local trash_volumes_stream, cmr_err =
 		Command("trash-list"):args({ "--volumes" }):stdout(Command.PIPED):stderr(Command.PIPED):output()
 
+	local matched_vol_path = nil
 	if trash_volumes_stream then
-		local matched_vol_path = nil
 		local matched_vol_length = 0
 		for vol in trash_volumes_stream.stdout:gmatch("[^\r\n]+") do
-			local vol_length = utf8.len(vol)
+			local vol_length = utf8.len(vol) or 0
 			if cwd:sub(1, vol_length) == vol and vol_length > matched_vol_length then
 				matched_vol_path = vol
 				matched_vol_length = vol_length
 			end
 		end
-		return matched_vol_path
+		if not matched_vol_path then
+			fail("Can't get trash directory")
+		end
 	else
-		fail("Spawn `trash-cli` failed with error code %s. Do you have it installed?", err_code)
-		return
+		fail("Failed to start `trash-list` with error: `%s`. Do you have `trash-cli` installed?", cmr_err)
 	end
+	return matched_vol_path
 end
 
 ---get list of latest files/folders trashed
@@ -87,7 +89,7 @@ local function get_latest_trashed_items(curr_working_volume)
 	---@type TRASHED_ITEM[]
 	local restorable_items = {}
 	local fake_enter = Command("printf"):stderr(Command.PIPED):stdout(Command.PIPED):spawn():take_stdout()
-	local trash_list_stream, err_code = Command(shell)
+	local trash_list_stream, err_cmd = Command(shell)
 		:args({ "-c", "trash-restore " .. path_quote(curr_working_volume) })
 		:stdin(fake_enter)
 		:stdout(Command.PIPED)
@@ -127,7 +129,7 @@ local function get_latest_trashed_items(curr_working_volume)
 			end
 		end
 	else
-		fail("Spawn `trash-cli` failed with error code %s. Do you have it installed?", err_code)
+		fail("Failed to start `trash-restore` with error: `%s`. Do you have `trash-cli` installed?", err_cmd)
 		return
 	end
 	return restorable_items
@@ -173,7 +175,6 @@ end
 function M:entry()
 	local curr_working_volume = get_trash_volume()
 	if not curr_working_volume then
-		fail("Can't get trash dir")
 		return
 	end
 	local trashed_items = get_latest_trashed_items(curr_working_volume)
