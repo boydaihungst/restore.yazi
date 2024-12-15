@@ -21,7 +21,7 @@ git clone https://github.com/boydaihungst/restore.yazi ~/.config/yazi/plugins/re
 or
 
 ```sh
-ya pack -a boydaihungst/restore.yazi
+ya pack -a boydaihungst/restore
 ```
 
 ## Usage
