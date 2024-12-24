@@ -11,7 +11,9 @@ end
 
 ---@enum STATE
 local STATE = {
-	OVERWRITE_POPUP_POSITION = "overwrite_popup_position",
+	POSITION = "position",
+	SHOW_CONFIRM = "show_confirm",
+	THEME = "theme",
 }
 
 local set_state = ya.sync(function(state, key, value)
@@ -39,6 +41,10 @@ local File_Type = {
 }
 
 ---@alias TRASHED_ITEM {trash_index: number, trashed_date_time: string, trashed_path: string, type: File_Type} Item in trash list
+
+function get_basename(filepath)
+	return filepath:match("^.+/(.+)$") or filepath
+end
 
 local get_cwd = ya.sync(function()
 	return tostring(cx.active.current.cwd)
@@ -164,12 +170,46 @@ local function restore_files(curr_working_volume, start_index, end_index)
 	success("Restored " .. tostring(file_to_restore_count) .. " file" .. (file_to_restore_count > 1 and "s" or ""))
 end
 
-function M:setup(_, opts)
-	if opts and opts.overwrite_popup_position and type(opts.overwrite_popup_position) == "table" then
-		set_state(STATE.OVERWRITE_POPUP_POSITION, opts.overwrite_popup_position)
+function M:setup(opts)
+	if opts and opts.position and type(opts.position) == "table" then
+		set_state(STATE.POSITION, opts.position)
 	else
-		set_state(STATE.OVERWRITE_POPUP_POSITION, { "center", w = 70 })
+		set_state(STATE.POSITION, { "center", w = 70, h = 40 })
 	end
+	if opts and opts.show_confirm then
+		set_state(STATE.SHOW_CONFIRM, opts.show_confirm)
+	else
+		set_state(STATE.SHOW_CONFIRM, false)
+	end
+	if opts and opts.theme and type(opts.theme) == "table" then
+		set_state(STATE.THEME, opts.theme)
+	else
+		set_state(STATE.THEME, {})
+	end
+end
+
+---@param trash_list TRASHED_ITEM[]
+local function get_components(trash_list)
+	local theme = get_state(STATE.THEME) or {}
+	theme.list_item = theme.list_item or {
+		odd = "blue",
+		even = "blue",
+	}
+	local trashed_items_components = {}
+	for idx, item in pairs(trash_list) do
+		local fg_color = theme.list_item.odd or "blue"
+		if idx % 2 == 0 then
+			fg_color = theme.list_item.even or "blue"
+		end
+		table.insert(
+			trashed_items_components,
+			ui.Line({
+				ui.Span(" "),
+				ui.Span(item.trashed_path):fg(fg_color),
+			}):align(ui.Line.LEFT)
+		)
+	end
+	return trashed_items_components
 end
 
 function M:entry()
@@ -183,25 +223,62 @@ function M:entry()
 	end
 	local collided_items = filter_none_exised_paths(trashed_items)
 	local overwrite_confirmed = true
+	local show_confirm = get_state(STATE.SHOW_CONFIRM)
+	local pos = get_state(STATE.POSITION)
+	pos = pos or { "center", w = 70, h = 40 }
+
+	local theme = get_state(STATE.THEME) or {}
+	theme.title = theme.title or "blue"
+	theme.header = theme.header or "green"
+	theme.header_warning = theme.header_warning or "yellow"
+	if ya.confirm and show_confirm then
+		local continue_restore = ya.confirm({
+			title = ui.Line("Restore files/folders"):fg(theme.title):bold(),
+			content = ui.Text({
+				ui.Line(""),
+				ui.Line("The following files and folders are going to be restored:"):fg(theme.header),
+				ui.Line(""),
+				table.unpack(get_components(trashed_items)),
+			})
+				:align(ui.Text.LEFT)
+				:wrap(ui.Text.WRAP),
+			--TODO: still wating for API :/
+			-- list = ui.List({
+			-- 	table.unpack(get_components(trashed_items)),
+			-- }),
+
+			pos = pos,
+		})
+		-- stopping
+		if not continue_restore then
+			return
+		end
+	end
+
 	-- show Confirm dialog with list of collided items
 	if #collided_items > 0 then
-		--[[
-			-- https://github.com/sxyazi/yazi/pull/1789
-			if ya.confirm then
-				-- local overwrite_confirmed, event = ya.confirm({
-				-- -- title = "Overwrite the destination file?",
-				-- 	content = "Restored file is existed, want to overwirte it?",
-				-- 	list = { collided_items.... },
-				-- })
-			end
-			--]]
-		-- TODO: Remove after ya.confirm() API released
-		local _, input_event = ya.input({
-			title = "Still want to restore?",
-			value = #collided_items .. " files and folders existed.",
-			position = get_state(STATE.OVERWRITE_POPUP_POSITION),
-		})
-		overwrite_confirmed = input_event == 1
+		if ya.confirm then
+			overwrite_confirmed = ya.confirm({
+				title = ui.Line("Restore files/folders"):fg(theme.title):bold(),
+				content = ui.Text({
+					ui.Line(""),
+					ui.Line("The following files and folders are existed, overwrite?"):fg(theme.header_warning),
+					ui.Line(""),
+					table.unpack(get_components(collided_items)),
+				})
+					:align(ui.Text.LEFT)
+					:wrap(ui.Text.WRAP),
+				pos = pos,
+			})
+		else
+			-- TODO: Remove after v0.4.4 released
+			local _, input_event = ya.input({
+				title = "Overwrite the destination items?",
+				value = #collided_items .. " files and folders existed.",
+				position = pos,
+			})
+			overwrite_confirmed = input_event == 1
+		end
 	end
 	if overwrite_confirmed then
 		restore_files(curr_working_volume, trashed_items[1].trash_index, trashed_items[#trashed_items].trash_index)
