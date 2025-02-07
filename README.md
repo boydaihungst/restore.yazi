@@ -9,14 +9,14 @@
   - [Usage](#usage)
   <!--toc:end-->
 
-[Yazi >=0.4](https://github.com/sxyazi/yazi) plugin to restore/recover latest deleted files/folders.
+[Yazi](https://github.com/sxyazi/yazi) plugin to restore/recover latest deleted files/folders.
 
 Note: Because the "ya.confirm() API" is not fully developed yet, if the file to be restored already exists, \
 there will be no overwrite confirmation window.
 
 ## Requirements
 
-- [yazi](https://github.com/sxyazi/yazi)
+- [yazi >= v25.2.7](https://github.com/sxyazi/yazi)
 - [trash-cli](https://github.com/andreafrancia/trash-cli)
   - If you have `Can't Get Trash Directory` error and running `trash-cli --volumes`
     in terminal throw `AttributeError: 'PrintVolumesList' object has no attribute 'run_action'`.

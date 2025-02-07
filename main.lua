@@ -1,3 +1,5 @@
+--- @since 25.2.7
+
 local M = {}
 local shell = os.getenv("SHELL") or ""
 local PackageName = "Restore"
