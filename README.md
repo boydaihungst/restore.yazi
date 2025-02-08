@@ -11,9 +11,6 @@
 
 [Yazi](https://github.com/sxyazi/yazi) plugin to restore/recover latest deleted files/folders.
 
-Note: Because the "ya.confirm() API" is not fully developed yet, if the file to be restored already exists, \
-there will be no overwrite confirmation window.
-
 ## Requirements
 
 - [yazi >= v25.2.7](https://github.com/sxyazi/yazi)
