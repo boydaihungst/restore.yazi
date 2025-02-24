@@ -21,7 +21,7 @@
 
 ## Installation
 
-### Linux/MacOS
+### Linux
 
 ```sh
 git clone https://github.com/boydaihungst/restore.yazi ~/.config/yazi/plugins/restore.yazi
