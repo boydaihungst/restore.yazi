@@ -259,28 +259,18 @@ function M:entry()
 
 	-- show Confirm dialog with list of collided items
 	if #collided_items > 0 then
-		if ya.confirm then
-			overwrite_confirmed = ya.confirm({
-				title = ui.Line("Restore files/folders"):fg(theme.title):bold(),
-				content = ui.Text({
-					ui.Line(""),
-					ui.Line("The following files and folders are existed, overwrite?"):fg(theme.header_warning),
-					ui.Line(""),
-					table.unpack(get_components(collided_items)),
-				})
-					:align(ui.Text.LEFT)
-					:wrap(ui.Text.WRAP),
-				pos = pos,
+		overwrite_confirmed = ya.confirm({
+			title = ui.Line("Restore files/folders"):fg(theme.title):bold(),
+			content = ui.Text({
+				ui.Line(""),
+				ui.Line("The following files and folders are existed, overwrite?"):fg(theme.header_warning),
+				ui.Line(""),
+				table.unpack(get_components(collided_items)),
 			})
-		else
-			-- TODO: Remove after v0.4.4 released
-			local _, input_event = ya.input({
-				title = "Overwrite the destination items?",
-				value = #collided_items .. " files and folders existed.",
-				position = pos,
-			})
-			overwrite_confirmed = input_event == 1
-		end
+				:align(ui.Text.LEFT)
+				:wrap(ui.Text.WRAP),
+			pos = pos,
+		})
 	end
 	if overwrite_confirmed then
 		restore_files(curr_working_volume, trashed_items[1].trash_index, trashed_items[#trashed_items].trash_index)
