@@ -41,7 +41,7 @@ ya pack -a boydaihungst/restore
 
      ```toml
      [manager]
-       keymap = [
+       append_keymap = [
          { on = "u", run = "plugin restore", desc = "Restore last deleted files/folders" },
          # or use "d + u" like me
          { on = ["d", "u"], run = "plugin restore", desc = "Restore last deleted files/folders" },
