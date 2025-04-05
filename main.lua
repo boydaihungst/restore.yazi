@@ -44,10 +44,6 @@ local File_Type = {
 
 ---@alias TRASHED_ITEM {trash_index: number, trashed_date_time: string, trashed_path: string, type: File_Type} Item in trash list
 
-function get_basename(filepath)
-	return filepath:match("^.+/(.+)$") or filepath
-end
-
 local get_cwd = ya.sync(function()
 	return tostring(cx.active.current.cwd)
 end)
