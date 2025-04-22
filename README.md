@@ -35,9 +35,17 @@ ya pack -a boydaihungst/restore
 
 ## Usage
 
+> [!IMPORTANT]
+> This plugin will restore files/folders based on date/time of deletion.
+> But removing files in yazi is running in batch mode (1000 files at a time), so if you visual select and then remove a large number of files at one,
+> then not all of them have the same date/time of deletion.
+> For example: visual select 10000 files and then remove them, the each 1000 files may have different date/time of deletion.
+> The result is that they maybe only restored partially (the worst case only last 1000 files).
+> Unfortunately, we doesn't have a way to deal with this issue.
+
 1. Key binding
 
-   - Add this to your `keymap.toml`:
+   - Add this to your `keymap.toml`, using `prepend_keymap` if you don't want to replace all other keys. Read more about [keymap](https://yazi-rs.github.io/docs/configuration/keymap).
 
      ```toml
      [manager]

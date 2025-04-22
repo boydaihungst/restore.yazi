@@ -154,7 +154,7 @@ local function restore_files(curr_working_volume, start_index, end_index)
 		return
 	end
 
-	local restored_status, err_cmd = Command(shell)
+	local restored_status, _ = Command(shell)
 		:args({
 			"-c",
 			"echo " .. ya.quote(start_index .. "-" .. end_index) .. " | trash-restore --overwrite " .. path_quote(
@@ -184,10 +184,10 @@ function M:setup(opts)
 	else
 		set_state(STATE.POSITION, { "center", w = 70, h = 40 })
 	end
-	if opts and opts.show_confirm then
+	if opts and opts.show_confirm ~= nil then
 		set_state(STATE.SHOW_CONFIRM, opts.show_confirm)
 	else
-		set_state(STATE.SHOW_CONFIRM, false)
+		set_state(STATE.SHOW_CONFIRM, true)
 	end
 	if opts and opts.theme and type(opts.theme) == "table" then
 		set_state(STATE.THEME, opts.theme)
@@ -228,6 +228,7 @@ function M:entry()
 	end
 	local overwrite_confirmed = true
 	local show_confirm = get_state(STATE.SHOW_CONFIRM)
+	show_confirm = show_confirm == nil and true or show_confirm
 	local pos = get_state(STATE.POSITION)
 	pos = pos or { "center", w = 70, h = 40 }
 
