@@ -41,7 +41,7 @@ ya pack -a boydaihungst/restore
 > then not all of them have the same date/time of deletion.
 > For example: visual select 10000 files and then remove them, the each 1000 files may have different date/time of deletion.
 > The result is that they maybe only restored partially (the worst case only last 1000 files).
-> Unfortunately, we doesn't have a way to deal with this issue.
+> To deal with this issue, you have to run "plugin restore" multiple times until every files just you needs are stored. (worst case, you have to press 10 times to restore 10k files)
 
 1. Key binding
 
