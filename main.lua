@@ -1,4 +1,4 @@
---- @since 25.2.7
+--- @since 25.4.8
 
 local M = {}
 local shell = os.getenv("SHELL") or ""
@@ -200,9 +200,9 @@ end
 local function get_components(trash_list)
 	local theme = get_state(STATE.THEME) or {}
 	local item_odd_style = theme.list_item and theme.list_item.odd and ui.Style():fg(theme.list_item.odd)
-		or (th and th.confirm and th.confirm.list or ui.Style():fg("blue"))
+		or (th.confirm.list or ui.Style():fg("blue"))
 	local item_even_style = theme.list_item and theme.list_item.even and ui.Style():fg(theme.list_item.even)
-		or (th and th.confirm and th.confirm.list or ui.Style():fg("blue"))
+		or (th.confirm.list or ui.Style():fg("blue"))
 
 	local trashed_items_components = {}
 	for idx, item in pairs(trash_list) do
@@ -233,8 +233,8 @@ function M:entry()
 	pos = pos or { "center", w = 70, h = 40 }
 
 	local theme = get_state(STATE.THEME) or {}
-	theme.title = theme.title and ui.Style():fg(theme.title):bold() or (th and th.confirm and th.confirm.title)
-	theme.header = theme.header and ui.Style():fg(theme.header) or (th and th.confirm and th.confirm.content)
+	theme.title = theme.title and ui.Style():fg(theme.title):bold() or th.confirm.title
+	theme.header = theme.header and ui.Style():fg(theme.header) or th.confirm.content
 	theme.header_warning = ui.Style():fg(theme.header_warning or "yellow")
 	if ya.confirm and show_confirm then
 		local continue_restore = ya.confirm({
