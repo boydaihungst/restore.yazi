@@ -13,7 +13,7 @@
 
 ## Requirements
 
-- [yazi >= v25.4.8](https://github.com/sxyazi/yazi)
+- [yazi >= v25.5.28](https://github.com/sxyazi/yazi)
 - [trash-cli](https://github.com/andreafrancia/trash-cli)
   - If you have `Can't Get Trash Directory` error and running `trash-cli --volumes`
     in terminal throw `AttributeError: 'PrintVolumesList' object has no attribute 'run_action'`.
@@ -30,6 +30,8 @@ git clone https://github.com/boydaihungst/restore.yazi ~/.config/yazi/plugins/re
 or
 
 ```sh
+ya pgk add boydaihungst/restore
+# or
 ya pack -a boydaihungst/restore
 ```
 
@@ -37,7 +39,7 @@ ya pack -a boydaihungst/restore
 
 > [!IMPORTANT]
 > This plugin will restore files/folders based on date/time of deletion.
-> But removing files in yazi is running in batch mode (1000 files at a time), so if you visual select and then remove a large number of files at one,
+> But removing files in yazi is running in batch mode (~1000 files at a time), so if you visual select and then remove a large number of files at one,
 > then not all of them have the same date/time of deletion.
 > For example: visual select 10000 files and then remove them, the each 1000 files may have different date/time of deletion.
 > The result is that they maybe only restored partially (the worst case only last 1000 files).
@@ -48,7 +50,7 @@ ya pack -a boydaihungst/restore
    - Add this to your `keymap.toml`, using `prepend_keymap` if you don't want to replace all other keys. Read more about [keymap](https://yazi-rs.github.io/docs/configuration/keymap).
 
      ```toml
-     [manager]
+     [mgr]
        keymap = [
          { on = "u", run = "plugin restore", desc = "Restore last deleted files/folders" },
          # or use "d + u" like me

@@ -1,4 +1,4 @@
---- @since 25.4.8
+--- @since 25.5.28
 
 local M = {}
 local shell = os.getenv("SHELL") or ""
@@ -65,7 +65,7 @@ end
 local function get_trash_volume()
 	local cwd = get_cwd()
 	local trash_volumes_stream, cmr_err =
-		Command("trash-list"):args({ "--volumes" }):stdout(Command.PIPED):stderr(Command.PIPED):output()
+		Command("trash-list"):arg({ "--volumes" }):stdout(Command.PIPED):stderr(Command.PIPED):output()
 
 	---@type string|nil
 	local matched_vol_path = nil
@@ -96,7 +96,7 @@ local function get_latest_trashed_items(curr_working_volume)
 
 	local fake_enter = Command("printf"):stderr(Command.PIPED):stdout(Command.PIPED):spawn():take_stdout()
 	local trash_list_stream, err_cmd = Command(shell)
-		:args({ "-c", "trash-restore " .. path_quote(curr_working_volume) })
+		:arg({ "-c", "trash-restore " .. path_quote(curr_working_volume) })
 		:stdin(fake_enter)
 		:stdout(Command.PIPED)
 		:stderr(Command.NULL)
@@ -155,7 +155,7 @@ local function restore_files(curr_working_volume, start_index, end_index)
 	end
 
 	local restored_status, _ = Command(shell)
-		:args({
+		:arg({
 			"-c",
 			"echo " .. ya.quote(start_index .. "-" .. end_index) .. " | trash-restore --overwrite " .. path_quote(
 				curr_working_volume
@@ -211,7 +211,7 @@ local function get_components(trash_list)
 			ui.Line({
 				ui.Span(" "),
 				ui.Span(item.trashed_path):style(idx % 2 == 0 and item_even_style or item_odd_style),
-			}):align(ui.Line.LEFT)
+			}):align(ui.Align.LEFT)
 		)
 	end
 	return trashed_items_components
@@ -246,8 +246,8 @@ function M:entry()
 				ui.Line(""),
 				table.unpack(get_components(trashed_items)),
 			})
-				:align(ui.Text.LEFT)
-				:wrap(ui.Text.WRAP),
+				:align(ui.Align.LEFT)
+				:wrap(ui.Wrap.YES),
 			pos = pos,
 		})
 		-- stopping
@@ -266,8 +266,8 @@ function M:entry()
 				ui.Line(""),
 				table.unpack(get_components(collided_items)),
 			})
-				:align(ui.Text.LEFT)
-				:wrap(ui.Text.WRAP),
+				:align(ui.Align.LEFT)
+				:wrap(ui.Wrap.YES),
 			pos = pos,
 		})
 	end
