@@ -247,7 +247,7 @@ function M:entry()
 				table.unpack(get_components(trashed_items)),
 			})
 				:align(ui.Align.LEFT)
-				:wrap(ui.Wrap.YES),
+				:wrap(ui.Text.WRAP),
 			pos = pos,
 		})
 		-- stopping
@@ -267,7 +267,7 @@ function M:entry()
 				table.unpack(get_components(collided_items)),
 			})
 				:align(ui.Align.LEFT)
-				:wrap(ui.Wrap.YES),
+				:wrap(ui.Text.WRAP),
 			pos = pos,
 		})
 	end
