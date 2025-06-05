@@ -1,4 +1,4 @@
---- @since 25.5.28
+--- @since 25.5.31
 
 local M = {}
 local shell = os.getenv("SHELL") or ""
@@ -247,7 +247,7 @@ function M:entry()
 				table.unpack(get_components(trashed_items)),
 			})
 				:align(ui.Align.LEFT)
-				:wrap(ui.Text.WRAP),
+				:wrap(ui.Wrap.YES),
 			pos = pos,
 		})
 		-- stopping
@@ -267,7 +267,7 @@ function M:entry()
 				table.unpack(get_components(collided_items)),
 			})
 				:align(ui.Align.LEFT)
-				:wrap(ui.Text.WRAP),
+				:wrap(ui.Wrap.YES),
 			pos = pos,
 		})
 	end
