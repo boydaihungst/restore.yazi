@@ -236,10 +236,20 @@ function M:entry()
 	theme.title = theme.title and ui.Style():fg(theme.title):bold() or th.confirm.title
 	theme.header = theme.header and ui.Style():fg(theme.header) or th.confirm.content
 	theme.header_warning = ui.Style():fg(theme.header_warning or "yellow")
+	-- TODO: remove this after next yazi released
+	local is_new_api = th.confirm.body
+
 	if ya.confirm and show_confirm then
 		local continue_restore = ya.confirm({
-			-- title = ui.Line("Restore files/folders"):fg(theme.title):bold(),
 			title = ui.Line("Restore files/folders"):style(theme.title),
+			body = is_new_api and ui.Text({
+				ui.Line(""),
+				ui.Line("The following files and folders are going to be restored:"):style(theme.header),
+				ui.Line(""),
+				table.unpack(get_components(trashed_items)),
+			})
+				:align(ui.Align.LEFT)
+				:wrap(ui.Wrap.YES),
 			content = ui.Text({
 				ui.Line(""),
 				ui.Line("The following files and folders are going to be restored:"):style(theme.header),
@@ -260,6 +270,14 @@ function M:entry()
 	if collided_items and #collided_items > 0 then
 		overwrite_confirmed = ya.confirm({
 			title = ui.Line("Restore files/folders"):style(theme.title),
+			body = is_new_api and ui.Text({
+				ui.Line(""),
+				ui.Line("The following files and folders are existed, overwrite?"):style(theme.header_warning),
+				ui.Line(""),
+				table.unpack(get_components(collided_items)),
+			})
+				:align(ui.Align.LEFT)
+				:wrap(ui.Wrap.YES),
 			content = ui.Text({
 				ui.Line(""),
 				ui.Line("The following files and folders are existed, overwrite?"):style(theme.header_warning),
