@@ -30,9 +30,7 @@ git clone https://github.com/boydaihungst/restore.yazi ~/.config/yazi/plugins/re
 or
 
 ```sh
-ya pgk add boydaihungst/restore
-# or
-ya pack -a boydaihungst/restore
+ya pkg add boydaihungst/restore
 ```
 
 ## Usage
