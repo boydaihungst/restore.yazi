@@ -273,7 +273,15 @@ function M:entry()
 			title = ui.Line("Restore files/folders"):style(theme.title),
 			body = ui.Text({
 				ui.Line(""),
-				ui.Line(#reversed_trashed_items .. " files and folders are going to be restored:"):style(theme.header),
+				ui.Line(
+					#reversed_trashed_items
+						.. " file"
+						.. (#reversed_trashed_items <= 1 and " " or "s ")
+						.. "and folder"
+						.. (#reversed_trashed_items <= 1 and " " or "s ")
+						.. (#reversed_trashed_items <= 1 and "is " or "are ")
+						.. "going to be restored:"
+				):style(theme.header),
 				ui.Line(""),
 				table.unpack(get_components(reversed_trashed_items)),
 			})
@@ -282,7 +290,15 @@ function M:entry()
 			-- TODO: remove this after next yazi released
 			content = ui.Text({
 				ui.Line(""),
-				ui.Line(#reversed_trashed_items .. " files and folders are going to be restored:"):style(theme.header),
+				ui.Line(
+					#reversed_trashed_items
+						.. " file"
+						.. (#reversed_trashed_items <= 1 and " " or "s ")
+						.. "and folder"
+						.. (#reversed_trashed_items <= 1 and " " or "s ")
+						.. (#reversed_trashed_items <= 1 and "is " or "are ")
+						.. "going to be restored:"
+				):style(theme.header),
 				ui.Line(""),
 				table.unpack(get_components(reversed_trashed_items)),
 			})
@@ -302,8 +318,15 @@ function M:entry()
 			title = ui.Line("Restore files/folders"):style(theme.title),
 			body = ui.Text({
 				ui.Line(""),
-				ui.Line(#reversed_collided_items .. " files and folders are existed, overwrite?")
-					:style(theme.header_warning),
+				ui.Line(
+					#reversed_collided_items
+						.. " file"
+						.. (#reversed_collided_items <= 1 and " " or "s ")
+						.. "and folder"
+						.. (#reversed_collided_items <= 1 and " " or "s ")
+						.. (#reversed_collided_items <= 1 and "is " or "are ")
+						.. "existed, overwrite?"
+				):style(theme.header_warning),
 				ui.Line(""),
 				table.unpack(get_components(reversed_collided_items)),
 			})
@@ -312,8 +335,15 @@ function M:entry()
 			-- TODO: remove this after next yazi released
 			content = ui.Text({
 				ui.Line(""),
-				ui.Line(#reversed_collided_items .. " files and folders are existed, overwrite?")
-					:style(theme.header_warning),
+				ui.Line(
+					#reversed_collided_items
+						.. " file"
+						.. (#reversed_collided_items <= 1 and " " or "s ")
+						.. "and folder"
+						.. (#reversed_collided_items <= 1 and " " or "s ")
+						.. (#reversed_collided_items <= 1 and "is " or "are ")
+						.. "existed, overwrite?"
+				):style(theme.header_warning),
 				ui.Line(""),
 				table.unpack(get_components(reversed_collided_items)),
 			})
