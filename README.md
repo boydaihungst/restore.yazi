@@ -52,8 +52,10 @@ ya pkg add boydaihungst/restore
          # - Restore multiple trashed files separated by comma, also support range:
          #      What file to restore [0..3]: 0-2, 3
 
-         # If you remove --overwrite it will exit without restore when there is existed file.
-         { on = [ "d", "U" ], run = "shell --block -- clear && trash-restore --overwrite", desc = "Restore deleted file (Interactive)" },
+         # This will throw error when there is existed file/folder
+         { on = [ "d", "U" ], run = "plugin restore -- --interactive", desc = "Restore deleted files/folders (Interactive)" },
+         # Or auto overwrite existed file/folder
+         { on = [ "d", "U" ], run = "plugin restore -- --interactive --interactive-overwrite", desc = "Restore deleted files/folders (Interactive overwrite)" },
        ]
      ```
 

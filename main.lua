@@ -246,12 +246,23 @@ function M:setup(opts)
 	set_state(STATE.INITIALIZED, true)
 end
 
-function M:entry()
+function M:entry(job)
 	if not get_state(STATE.INITIALIZED) then
 		M:setup()
 	end
 	local curr_working_volume = get_trash_volume()
 	if not curr_working_volume then
+		return
+	end
+	local interactive_mode = job.args.interactive
+	local interactive_overwrite = job.args.interactive_overwrite
+	if interactive_mode == true then
+		ya.emit("shell", {
+			"clear && trash-restore " .. (interactive_overwrite and "--overwrite" or "") .. " " .. path_quote(
+				curr_working_volume
+			),
+			block = true,
+		})
 		return
 	end
 	--NOTE: No need to reverse the list here, waste of time and memory
