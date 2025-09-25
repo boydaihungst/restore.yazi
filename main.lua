@@ -90,24 +90,24 @@ local function get_trash_volume()
 		Command("trash-list"):arg({ "--volumes" }):stdout(Command.PIPED):stderr(Command.PIPED):output()
 
 	---@type string|nil
-	local matched_vol_path
+	local best_matched_vol_path
 	if trash_volumes_stream then
-		local matched_vol_length = 0
+		local previous_matched_vol_length = 0
 		for vol in trash_volumes_stream.stdout:gmatch("[^\r\n]+") do
-			local vol_length = utf8.len(vol) or 0
-			if cwd_raw:sub(1, vol_length) == vol and vol_length > matched_vol_length then
+			local vol_length = utf8.len(vol) or 1
+			if cwd_raw:sub(1, vol_length) == vol and vol_length > previous_matched_vol_length then
 				-- NOTE: Don't break here, because we need to get the best match volume
-				matched_vol_path = vol
-				matched_vol_length = vol_length
+				best_matched_vol_path = vol
+				previous_matched_vol_length = vol_length
 			end
 		end
-		if not matched_vol_path then
+		if not best_matched_vol_path then
 			error("Can't get trash directory")
 		end
 	else
 		error("Failed to start `trash-list` with error: `%s`. Do you have `trash-cli` installed?", cmr_err)
 	end
-	return matched_vol_path
+	return best_matched_vol_path
 end
 
 --- Get list of files/folders trashed in reversed order
