@@ -128,9 +128,7 @@ local function get_latest_trashed_items(curr_working_volume)
 
 		while true do
 			local line, event = reversed_trashed_list_stream:read_line()
-			if event == 1 then
-				goto continue
-			elseif event ~= 0 then
+			if event ~= 0 then
 				break
 			end
 			-- remove leading spaces
@@ -152,7 +150,6 @@ local function get_latest_trashed_items(curr_working_volume)
 				end
 				last_item_datetime = item_date
 			end
-			::continue::
 		end
 		reversed_trashed_list_stream:start_kill()
 
@@ -280,7 +277,7 @@ function M:entry(job)
 	---@type Theme
 	local theme = get_state(STATE.THEME)
 	theme.title = theme.title and ui.Style():fg(theme.title):bold() or th.confirm.title
-	theme.header = theme.header and ui.Style():fg(theme.header) or th.confirm.body
+	theme.header = theme.header and ui.Style():fg(theme.header) or th.confirm.body or th.confirm.content
 	theme.header_warning = ui.Style():fg(theme.header_warning or "yellow")
 	if show_confirm then
 		local continue_restore = ya.confirm({
