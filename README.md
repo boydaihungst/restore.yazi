@@ -15,7 +15,7 @@
 
 - [yazi >= v25.5.31](https://github.com/sxyazi/yazi)
 - [trash-cli](https://github.com/andreafrancia/trash-cli)
-  - If you have `Can't Get Trash Directory` error and running `trash-cli --volumes`
+  - If you have `Can't Get Trash Directory` error and running `trash-list --volumes`
     in terminal throw `AttributeError: 'PrintVolumesList' object has no attribute 'run_action'`.
     Remove the old version of trash-cli and install newer version [How to install](https://github.com/andreafrancia/trash-cli?tab=readme-ov-file#the-easy-way).
 
