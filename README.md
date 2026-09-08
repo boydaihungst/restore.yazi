@@ -1,5 +1,14 @@
 # restore.yazi
 
+> [!IMPORTANT]
+> This repository is deprecated  
+> This project is no longer actively maintained,  
+> and there will be no more updates to this repository.  
+> If you've made a fork or a newer, actively maintained version of this project,  
+> feel free to share it in the Issues page.  
+> This way, newcomers can easily find an up-to-date alternative.
+> Forks, improvements, and alternative implementations are always welcome!
+
 <!--toc:start-->
 
 - [restore.yazi](#restoreyazi)
@@ -13,7 +22,7 @@
 
 ## Requirements
 
-- [yazi >= v25.5.31](https://github.com/sxyazi/yazi)
+- [yazi >= v25.5.31 and <= v26.9.1](https://github.com/sxyazi/yazi)
 - [trash-cli](https://github.com/andreafrancia/trash-cli)
   - If you have `Can't Get Trash Directory` error and running `trash-list --volumes`
     in terminal throw `AttributeError: 'PrintVolumesList' object has no attribute 'run_action'`.
